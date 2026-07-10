@@ -34,7 +34,22 @@ OVERLAY_TEMPLATE = """<style id="__live-edit-style__">
 <script id="__live-edit-script__">
 (function(){
   var FILE = %(file)s;
-  var EDIT_TAGS = ["P","LI","H1","H2","H3","H4","H5","H6","TD","TH","SPAN","BLOCKQUOTE"];
+  // Any tag here becomes editable ONLY if it's also a leaf with no child
+  // elements and non-empty trimmed text (see markEditable() below) -- that
+  // filter is what makes it safe to list broadly. Real decks put visible
+  // text directly inside bare <div>s far more often than inside <p>/<span>,
+  // so DIV is included (the original gap: a Gantt/component-map deck had
+  // almost all its text -- bar/row/chip labels -- in bare <div>s and none
+  // of it was editable). Deliberately excluded: A, BUTTON, LABEL, SUMMARY --
+  // each has default browser click behavior (navigate, fire a handler,
+  // toggle an associated control, toggle a <details> panel) that would
+  // fire at the same time a click is trying to enter edit mode.
+  var EDIT_TAGS = [
+    "P","DIV","LI","H1","H2","H3","H4","H5","H6","BLOCKQUOTE",
+    "TD","TH","CAPTION",
+    "SPAN","STRONG","B","EM","I","SMALL","MARK","CODE","TIME",
+    "DT","DD","LEGEND","FIGCAPTION"
+  ];
   var selectorToId = {};
   var noteIdToItemEl = {};
   var currentCommentSelector = null;
