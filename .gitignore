@@ -1,0 +1,6 @@
+.worktrees/
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+.slide-edits/
